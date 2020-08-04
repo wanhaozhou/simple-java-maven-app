@@ -29,6 +29,20 @@ pipeline {
                 paths(currentBuild)
             }
         }
+        stage('Verify Syntax') {
+            when {
+                allOf {
+                    anyOf {
+                        branch 'foo';
+                        branch 'bar'
+                    }
+                    changeset pattern: ".*src/main/java/com/mycompany/app/.*", comparator: "REGEXP"
+                }
+            }
+            steps {
+                sh 'echo hello'
+            }
+        }
         stage('Deliver') { 
             steps {
                 sh './jenkins/scripts/deliver.sh' 
