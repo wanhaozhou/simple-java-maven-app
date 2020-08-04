@@ -26,16 +26,12 @@ pipeline {
                 changeset pattern: ".*src/main/java/com/mycompany/app/.*", comparator: "REGEXP"
             }
             steps {
-                def changeLogSets = currentBuild.changeSets
-                for (int i = 0; i < changeLogSets.size(); i++) {
-                    def entries = changeLogSets[i].items
-                    for (int j = 0; j < entries.length; j++) {
-                        def entry = entries[j]
-                        entry.getAffectedPaths().each {
-                            echo "Change detected: ${it}"   
-                        }
+                def paths = currentBuild.changeSets.collectMany {
+                    it.items.collectMany {
+                        it.affectedPaths
                     }
-                }
+                }.unique()
+                echo paths.join('\n')
             }
         }
         stage('Deliver') { 
