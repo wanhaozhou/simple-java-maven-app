@@ -21,6 +21,14 @@ pipeline {
                 }
             }
         }
+        stage('Optional') {
+            when {
+                changeset pattern: ".*src/main/java/com/mycompany/app/.*", comparator: "REGEXP"
+            }
+            steps {
+                sh 'echo optional'
+            }
+        }
         stage('Deliver') { 
             steps {
                 sh './jenkins/scripts/deliver.sh' 
