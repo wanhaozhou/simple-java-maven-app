@@ -26,7 +26,7 @@ pipeline {
                 changeset pattern: ".*src/main/java/com/mycompany/app/.*", comparator: "REGEXP"
             }
             steps {
-                echo currentBuild.changeSets.toString()
+                paths()
             }
         }
         stage('Deliver') { 
@@ -35,4 +35,14 @@ pipeline {
             }
         }
     }
+}
+
+
+static def paths()  {
+    def res = currentBuild.changeSets.collectMany {
+        it.items.collectMany {
+            it.affectedPaths
+        }
+    }.unique()
+    println(res.join('\n'))
 }
