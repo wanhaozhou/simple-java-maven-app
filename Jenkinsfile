@@ -26,7 +26,7 @@ pipeline {
                 changeset pattern: ".*src/main/java/com/mycompany/app/.*", comparator: "REGEXP"
             }
             steps {
-                sh 'echo optional'
+                println(currentBuild.changeSets)
             }
         }
         stage('Deliver') { 
